@@ -34,6 +34,7 @@ async def main():
     
     last_id = read_last_id()
     messages = []
+    print("start collecting messages")
     async for message in client.iter_messages(config.source_chat_id, reverse=True):
         if last_id and message.id <= last_id:
             continue
