@@ -17,6 +17,10 @@ def write_last_id(msg_id):
     with open(LAST_ID_FILE, 'w') as f:
         f.write(str(msg_id))
 
+def progress_callback(current, total):
+    percent = int(current * 100 / total) if total else 0
+    print(f"Скачано {current} из {total} байт ({percent}%)", end='\r')
+
 client = TelegramClient(config.session_name, config.api_id, config.api_hash)
 
 async def main():
@@ -47,19 +51,19 @@ async def main():
             await client.send_message(config.target_chat_id, message.text)
         # Копируем фото
         if message.photo:
-            file = await message.download_media()
+            file = await message.download_media(progress_callback=progress_callback)
             await client.send_file(config.target_chat_id, file, caption=message.text if message.text else None)
             if file and os.path.exists(file):
                 os.remove(file)
         # Копируем кружочки (video_note)
         if message.video_note:
-            file = await message.download_media()
+            file = await message.download_media(progress_callback=progress_callback)
             await client.send_file(config.target_chat_id, file)
             if file and os.path.exists(file):
                 os.remove(file)
         # Копируем голосовые сообщения (voice)
         if message.voice:
-            file = await message.download_media()
+            file = await message.download_media(progress_callback=progress_callback)
             await client.send_file(config.target_chat_id, file)
             if file and os.path.exists(file):
                 os.remove(file)
