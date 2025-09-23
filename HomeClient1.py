@@ -46,34 +46,43 @@ async def main():
 
     for message in messages:
         print(f"{message.id}, {message.date}: {message.text} ")
-        # Копируем текст
-        if message.text:
+        has_media = any([
+            message.photo,
+            message.video_note,
+            message.voice,
+            message.document,
+            message.audio
+        ])
+
+        # Если только текст
+        if message.text and not has_media:
             await client.send_message(config.target_chat_id, message.text)
-        # Копируем фото
+
+        # Фото
         if message.photo:
             file = await message.download_media(progress_callback=progress_callback)
             await client.send_file(config.target_chat_id, file, caption=message.text if message.text else None)
             if file and os.path.exists(file):
                 os.remove(file)
-        # Копируем кружочки (video_note)
+        # Кружочки (video_note)
         if message.video_note:
             file = await message.download_media(progress_callback=progress_callback)
-            await client.send_file(config.target_chat_id, file)
+            await client.send_file(config.target_chat_id, file, caption=message.text if message.text else None)
             if file and os.path.exists(file):
                 os.remove(file)
-        # Копируем голосовые сообщения (voice)
+        # Голосовые сообщения (voice)
         if message.voice:
             file = await message.download_media(progress_callback=progress_callback)
-            await client.send_file(config.target_chat_id, file)
+            await client.send_file(config.target_chat_id, file, caption=message.text if message.text else None)
             if file and os.path.exists(file):
                 os.remove(file)
-        # Копируем документы (document)
+        # Документы (document)
         if message.document:
             file = await message.download_media(progress_callback=progress_callback)
             await client.send_file(config.target_chat_id, file, caption=message.text if message.text else None)
             if file and os.path.exists(file):
                 os.remove(file)
-        # Копируем аудиофайлы (audio)
+        # Аудиофайлы (audio)
         if message.audio:
             file = await message.download_media(progress_callback=progress_callback)
             await client.send_file(config.target_chat_id, file, caption=message.text if message.text else None)
