@@ -37,7 +37,7 @@ async def main():
         if last_id and message.id <= last_id:
             continue
         messages.append(message)
-        if len(messages) >= 10:
+        if len(messages) >= config.limit:
             break
 
     for message in messages:
