@@ -67,21 +67,8 @@ async def main():
 
         print(f"{message.id} / {messages.__len__()+last_id}, {media_type}, {message.date}: {message.text} ")
 
-        match True:
-            case _ if message.photo:
-                file = await message.download_media(progress_callback=progress_callback)
-            case _ if message.video_note:
-                file = await message.download_media(progress_callback=progress_callback)
-            case _ if message.voice:
-                file = await message.download_media(progress_callback=progress_callback)
-            case _ if message.audio:
-                file = await message.download_media(progress_callback=progress_callback)
-            case _ if getattr(message, 'video', None):
-                file = await message.download_media(progress_callback=progress_callback)
-            case _ if message.document:
-                file = await message.download_media(progress_callback=progress_callback)
-            case _:
-                pass
+        if media_type in ['photo', 'video_note', 'voice', 'audio', 'video', 'document']: 
+            file = await message.download_media(progress_callback=progress_callback)
 
         if file:
             try:
