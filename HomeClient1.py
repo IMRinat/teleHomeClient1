@@ -78,8 +78,7 @@ async def main():
         if message.text and not media_type:
             media_type = 'text'     
 
-        print(f"{message.id},{media_type}, {message.date}: {message.text} ")
-
+        print(f"{message.id} / {messages.count}, {media_type}, {message.date}: {message.text} ")
 
         match True:
             case _ if message.photo:
@@ -98,11 +97,11 @@ async def main():
                 pass
 
         if file:
-            await client.send_file(config.target_chat_id, file, caption=caption)
+            await client.send_file(config.target_chat_id, file, caption=f"{message.date}: {caption}")
             if file and os.path.exists(file):
                 os.remove(file)
         elif message.text:
-            await client.send_message(config.target_chat_id, message.text)
+            await client.send_message(config.target_chat_id,  f"{message.date}: {message.text}")
 
         write_last_id(message.id)
 
