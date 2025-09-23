@@ -35,6 +35,16 @@ async def main():
     #me = await client.get_me()
     #await client.send_message('me', 'Привет! Это сообщение отправлено моим первым клиентом.')
 
+    #count_source = 0
+    #async for _ in client.iter_messages(config.source_chat_id):
+    #    count_source += 1
+    #print(f"Количество сообщений count_source: {count_source}")
+
+    #count_dest = 0
+    #async for _ in client.iter_messages(config.target_chat_id):
+    #    count_dest += 1
+    #print(f"Количество сообщений count_dest: {count_dest}")
+
     last_id = read_last_id()
     messages = []
     async for message in client.iter_messages(config.source_chat_id, reverse=True):
