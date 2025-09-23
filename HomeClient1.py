@@ -51,6 +51,18 @@ async def main():
             await client.send_file(config.target_chat_id, file, caption=message.text if message.text else None)
             if file and os.path.exists(file):
                 os.remove(file)
+        # Копируем кружочки (video_note)
+        if message.video_note:
+            file = await message.download_media()
+            await client.send_file(config.target_chat_id, file)
+            if file and os.path.exists(file):
+                os.remove(file)
+        # Копируем голосовые сообщения (voice)
+        if message.voice:
+            file = await message.download_media()
+            await client.send_file(config.target_chat_id, file)
+            if file and os.path.exists(file):
+                os.remove(file)
         write_last_id(message.id)
 
 with client:
