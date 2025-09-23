@@ -45,7 +45,6 @@ async def main():
             break
 
     for message in messages:
-        print(f"{message.id}, {message.date}: {message.text} ")
         caption = message.text if message.text else None
         file = None
         media_type = None
@@ -53,21 +52,37 @@ async def main():
         match True:
             case _ if message.photo:
                 media_type = 'photo'
-                file = await message.download_media(progress_callback=progress_callback)
             case _ if message.video_note:
                 media_type = 'video_note'
-                file = await message.download_media(progress_callback=progress_callback)
             case _ if message.voice:
                 media_type = 'voice'
-                file = await message.download_media(progress_callback=progress_callback)
             case _ if message.audio:
                 media_type = 'audio'
-                file = await message.download_media(progress_callback=progress_callback)
             case _ if getattr(message, 'video', None):
                 media_type = 'video'
-                file = await message.download_media(progress_callback=progress_callback)
             case _ if message.document:
                 media_type = 'document'
+            case _:
+                pass
+
+        if message.text and not media_type:
+            media_type = 'text'     
+
+        print(f"{message.id},{media_type}, {message.date}: {message.text} ")
+
+
+        match True:
+            case _ if message.photo:
+                file = await message.download_media(progress_callback=progress_callback)
+            case _ if message.video_note:
+                file = await message.download_media(progress_callback=progress_callback)
+            case _ if message.voice:
+                file = await message.download_media(progress_callback=progress_callback)
+            case _ if message.audio:
+                file = await message.download_media(progress_callback=progress_callback)
+            case _ if getattr(message, 'video', None):
+                file = await message.download_media(progress_callback=progress_callback)
+            case _ if message.document:
                 file = await message.download_media(progress_callback=progress_callback)
             case _:
                 pass
