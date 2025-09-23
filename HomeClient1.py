@@ -106,7 +106,7 @@ async def main():
                 await client.send_file(config.target_chat_id, file, caption=f"{message.date}: {caption}", progress_callback=progress_up_callback)
             except PhotoInvalidDimensionsError:
             # если не проходит как фото — отправляем как документ
-                 await client.send_file(config.target_chat_id, file, caption=f"{message.date}: {caption}", progress_callback=progress_up_callback, force_document=True)
+                await client.send_file(config.target_chat_id, file, caption=f"{message.date}: {caption}", progress_callback=progress_up_callback, force_document=True)
             if file and os.path.exists(file):
                 os.remove(file)
         elif message.text:
