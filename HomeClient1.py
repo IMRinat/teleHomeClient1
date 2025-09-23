@@ -21,6 +21,10 @@ def progress_callback(current, total):
     percent = int(current * 100 / total) if total else 0
     print(f"Скачано {current} из {total} байт ({percent}%)", end='\r')
 
+def progress_up_callback(current, total):
+    percent = int(current * 100 / total) if total else 0
+    print(f"Отправлено {current} из {total} байт ({percent}%)", end='\r')
+
 client = TelegramClient(config.session_name, config.api_id, config.api_hash)
 
 async def main():
@@ -97,7 +101,7 @@ async def main():
                 pass
 
         if file:
-            await client.send_file(config.target_chat_id, file, caption=f"{message.date}: {caption}")
+            await client.send_file(config.target_chat_id, file, caption=f"{message.date}: {caption}", progress_callback=progress_up_callback)
             if file and os.path.exists(file):
                 os.remove(file)
         elif message.text:
