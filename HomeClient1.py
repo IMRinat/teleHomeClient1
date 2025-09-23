@@ -78,7 +78,7 @@ async def main():
         if message.text and not media_type:
             media_type = 'text'     
 
-        print(f"{message.id} / {messages.count}, {media_type}, {message.date}: {message.text} ")
+        print(f"{message.id} / {messages.__len__()+last_id}, {media_type}, {message.date}: {message.text} ")
 
         match True:
             case _ if message.photo:
