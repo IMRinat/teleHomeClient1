@@ -1,6 +1,7 @@
 from telethon import TelegramClient, events
 import config
 import os
+from telethon.errors import PhotoInvalidDimensionsError
 
 LAST_ID_FILE = 'last_message_id.txt'
 
@@ -101,7 +102,11 @@ async def main():
                 pass
 
         if file:
-            await client.send_file(config.target_chat_id, file, caption=f"{message.date}: {caption}", progress_callback=progress_up_callback)
+            try:
+                await client.send_file(config.target_chat_id, file, caption=f"{message.date}: {caption}", progress_callback=progress_up_callback)
+            except PhotoInvalidDimensionsError:
+            # если не проходит как фото — отправляем как документ
+                 await client.send_file(config.target_chat_id, file, caption=f"{message.date}: {caption}", progress_callback=progress_up_callback, force_document=True)
             if file and os.path.exists(file):
                 os.remove(file)
         elif message.text:
