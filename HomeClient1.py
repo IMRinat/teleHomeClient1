@@ -2,6 +2,7 @@ from telethon import TelegramClient, events
 import config
 import os
 from telethon.errors import PhotoInvalidDimensionsError
+from telethon.errors.rpcerrorlist import FileReferenceExpiredError
 
 LAST_ID_FILE = 'last_message_id.txt'
 
@@ -68,8 +69,12 @@ async def main():
 
         print(f"{message.id} / {messages.__len__()+last_id}, {media_type}, {message.date}: {message.text} ")
 
-        if media_type in ['photo', 'video_note', 'voice', 'audio', 'video', 'document']: 
-            file = await message.download_media(progress_callback=progress_callback)
+        try:
+            if media_type in ['photo', 'video_note', 'voice', 'audio', 'video', 'document']: 
+                file = await message.download_media(progress_callback=progress_callback)
+        except FileReferenceExpiredError:
+            print("FileReferenceExpiredError: Ошибка ссылки на файл, пропускаем сообщение.")
+            pass
 
         if file:
             try:
