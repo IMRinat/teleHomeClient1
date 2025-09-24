@@ -43,6 +43,7 @@ async def main():
         if len(messages) >= config.limit:
             break
 
+    messageNumber = 0  
     for message in messages:
         caption = message.text if message.text else None
         file = None
@@ -67,7 +68,8 @@ async def main():
         if message.text and not media_type:
             media_type = 'text'     
 
-        print(f"{message.id} / {messages.__len__()+last_id}, {media_type}, {message.date}: {message.text} ")
+        messageNumber += 1
+        print(f"{messageNumber} / {messages.__len__()}, {media_type}, {message.date}: {message.text} ")
 
         try:
             if media_type in ['photo', 'video_note', 'voice', 'audio', 'video', 'document']: 
