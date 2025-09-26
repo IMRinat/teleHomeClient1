@@ -71,12 +71,8 @@ async def main():
         messageNumber += 1
         print(f"{messageNumber} / {messages.__len__()}, {media_type}, {message.date}: {message.text} ")
 
-        try:
-            if media_type in ['photo', 'video_note', 'voice', 'audio', 'video', 'document']: 
-                file = await message.download_media(progress_callback=progress_callback)
-        except FileReferenceExpiredError:
-            print("FileReferenceExpiredError: Ошибка ссылки на файл, пропускаем сообщение.")
-            pass
+        if media_type in ['photo', 'video_note', 'voice', 'audio', 'video', 'document']: 
+            file = await message.download_media(progress_callback=progress_callback)
 
         if file:
             try:
